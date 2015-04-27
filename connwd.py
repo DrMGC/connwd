@@ -3,6 +3,7 @@
 import sys
 import time
 import subprocess
+import logging
 
 
 class ConnectionApi:
@@ -24,7 +25,7 @@ class ConnectionApi:
 
 class ConnWD:
 	def __init__(self, connapi):
-
+		logging.basicConfig(format="%(levelname)-8s [%(asctime)s]  %(message)s", level=logging.DEBUG)
 		self._running = False
 		self._connapi = connapi
 
@@ -34,9 +35,9 @@ class ConnWD:
 		self._connapi.up()
 		time.sleep(1)
 		if self._connapi.check():
-			print("Connection upped")
+			logging.info("Connection upped")
 		else:
-			print("Failed to up connection")
+			logging.error("Failed to up connection")
 			
 		self._running = False
 
@@ -46,9 +47,9 @@ class ConnWD:
 		self._connapi.down()
 		time.sleep(1)
 		if self._connapi.check():
-			print("Failed to down connection")
+			logging.info("Failed to down connection")
 		else:
-			print("Connection downed")
+			logging.error("Connection downed")
 
 		self._running = False
 
@@ -71,17 +72,17 @@ class ConnWD:
 				if not self._connapi.check():
 					if tries > tries_reup_level:
 						self._connapi.down()
-						print("Downing...")
+						logging.info("Downing...")
 						time.sleep(1)
 					self._connapi.up()
 					tries += 1
-					print("Upping... (try %s)" % tries)
+					logging.info("Upping... (try %s)" % tries)
 				elif tries > 0:
-					print("Upped!")
+					logging.info("Upped!")
 					tries = 0
 				time.sleep(1)
 			except KeyboardInterrupt:
-				print("Stopping watching...")
+				logging.info("Stopping watching...")
 				self._running = False
 
 		self._running = False
