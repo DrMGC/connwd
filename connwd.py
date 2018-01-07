@@ -16,7 +16,7 @@ class ConnectionApi:
 	def check(self):
 		url = "ya.ru"
 		out, err = subprocess.Popen(["ping", url, "-c", "1"], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-		return err.decode("utf-8") != "ping: unknown host %s\n" % url
+		return err.decode("utf-8") not in ["ping: unknown host %s\n" % url, 'ping: %s: Временный сбой в разрешении имен\n' % url]
 
 	@property
 	def name(self) -> str:
